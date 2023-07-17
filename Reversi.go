@@ -228,13 +228,31 @@ func parseInput(input string) (int, int, error) {
 	return row, col, nil
 }
 
+// getPieceCounts returns the counts of black and white pieces on the board.
+func (g *Game) getPieceCounts() (int, int) {
+	blackCount, whiteCount := 0, 0
+	for row := 0; row < BoardSize; row++ {
+		for col := 0; col < BoardSize; col++ {
+			if g.board[row][col] == PlayerBlack {
+				blackCount++
+			} else if g.board[row][col] == PlayerWhite {
+				whiteCount++
+			}
+		}
+	}
+	return blackCount, whiteCount
+}
+
 func main() {
 	game := NewGame()
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for !game.isGameOver() {
 		game.PrintBoard()
+		blackCount, whiteCount := game.getPieceCounts()
 		fmt.Printf("Current Turn: %s\n", game.currentTurn)
+		fmt.Printf("Black Pieces: %d\n", blackCount)
+		fmt.Printf("White Pieces: %d\n", whiteCount)
 
 		fmt.Print("Enter row (1-8) and column (A-H) separated by space: ")
 		if scanner.Scan() {
@@ -254,5 +272,8 @@ func main() {
 	}
 
 	game.PrintBoard()
+	blackCount, whiteCount := game.getPieceCounts()
 	fmt.Printf("Game Over! Winner: %s\n", game.getWinner())
+	fmt.Printf("Black Pieces: %d\n", blackCount)
+	fmt.Printf("White Pieces: %d\n", whiteCount)
 }
